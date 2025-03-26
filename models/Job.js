@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const JobSchema = new mongoose.Schema({
   url: { type: String, required: true, unique: true }, // Unique job link
@@ -14,4 +14,4 @@ const JobSchema = new mongoose.Schema({
   description: { type: String }, // Full job description
 });
 
-module.exports = mongoose.model("Job", JobSchema);
+export default mongoose.model("Job", JobSchema);

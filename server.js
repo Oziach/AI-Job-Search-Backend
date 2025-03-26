@@ -1,8 +1,8 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const uploadRoutes = require("./routes/uploadRoutes");
-const connectDB = require("./configs/mongoDBConfig")
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import uploadRoutes from "./routes/uploadRoutes.js";
+import {connectDB} from "./configs/mongoDBConfig.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;

@@ -1,5 +1,5 @@
-const multer = require("multer");
-const path = require("path");
+import multer from "multer";
+import path from "path";
 
 // Multer setup for file uploads
 const configMulter = () => {
@@ -13,6 +13,5 @@ const configMulter = () => {
   return multer({ storage }); // Return the configured multer instance
 };
 
-const upload = configMulter(); // Initialize upload instance
+export const upload = configMulter(); // Initialize upload instance
 
-module.exports = { configMulter, upload };

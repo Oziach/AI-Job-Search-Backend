@@ -1,5 +1,5 @@
-const express = require("express");
-const {upload} = require("../configs/multerConfig");
+import express from "express";
+import { upload } from "../configs/multerConfig.js";
 
 const router = express.Router();
 
@@ -11,4 +11,4 @@ router.post("/", upload.single("resume"), (req, res) => {
     res.json({ message: "File uploaded successfully", file: req.file.filename });
   });
 
-  module.exports = router;
+export default router;

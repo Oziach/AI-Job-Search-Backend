@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-
-const connectDB = async () => {
+import mongoose from "mongoose";
+export const connectDB = async () => {
   try {
     await mongoose.connect(`${process.env.MONGODB_URI}/jobSearchDb`, {
       useNewUrlParser: true,
@@ -12,5 +11,3 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-module.exports = connectDB;

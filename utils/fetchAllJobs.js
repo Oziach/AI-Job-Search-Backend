@@ -1,8 +1,8 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
-const axios = require("axios");
-const connectDB = require("../configs/mongoDBConfig"); // Import MongoDB connection
-const Job = require("../models/Job")
+import "dotenv/config";
+import mongoose from "mongoose";
+import axios from "axios";
+import connectDB from "../configs/mongoDBConfig.js"; // Import MongoDB connection
+import Job from "../models/Job.js";
 
 // Fetch and store jobs
 const fetchAndStoreJobs = async () => {
