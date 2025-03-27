@@ -1,7 +1,7 @@
 import "dotenv/config";
 import mongoose from "mongoose";
 import axios from "axios";
-import connectDB from "../configs/mongoDBConfig.js"; // Import MongoDB connection
+import {connectDB} from "../configs/mongoDBConfig.js"; // Import MongoDB connection
 import Job from "../models/Job.js";
 
 // Fetch and store jobs
@@ -14,7 +14,7 @@ const fetchAndStoreJobs = async () => {
     const jobs = response.data.jobs;
 
     if (!jobs || jobs.length === 0) {
-      console.log("⚠️ No jobs found.");
+      console.log("No jobs found.");
       return;
     }
 
