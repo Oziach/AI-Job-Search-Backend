@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
 import {connectDB} from "./configs/mongoDBConfig.js";
 
 const app = express();
@@ -13,7 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-app.use('/upload',uploadRoutes)
+app.use('/user', authRoutes);
+app.use('/upload',uploadRoutes);
+app.use('/jobs', jobRoutes);
 
 //configs
 connectDB();
