@@ -1,11 +1,14 @@
 import express from "express";
-import { extractResumeText, analyzeResumeWithDeepSeek } from "../utils/resumeAnalysisUtils";
-import { findMatchingJobs } from "../utils/jobsUtils";
+import { extractResumeText, analyzeResumeWithDeepSeek } from "../utils/resumeAnalysisUtils.js";
+import { findMatchingJobs } from "../utils/jobsUtils.js";
+import { fileURLToPath } from "url";
+import path from "path";
+
 const router = express.Router();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const testResumePath = path.join(__dirname, 'uploads', 'testResume.pdf');
+const testResumePath = path.join(__dirname,'..', 'uploads', 'testResume.pdf');
 
 
 // Upload Endpoint
