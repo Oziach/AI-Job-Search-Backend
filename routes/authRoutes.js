@@ -6,7 +6,7 @@ import 'dotenv/config';
 const router = express.Router();
 
 const generateToken = (user) => {
-    return jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: "6h" });
+    return jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET);
 };
 
 // Register Route
@@ -22,7 +22,10 @@ router.post("/register", async (req, res) => {
       const newUser = new User({ username, password });
       await newUser.save();
   
-      res.status(201).json({ message: "User registered successfully", succes:true});
+       // Generate JWT Token
+       const token = generateToken(newUser);
+       res.json({ token, username: newUser.username, success: true });
+
     } catch (error) {
       res.status(500).json({ message: "Server error", error: error.message, success:false });
     }
@@ -46,6 +49,7 @@ router.post("/login", async (req, res) => {
   
       // Generate JWT Token
       const token = generateToken(user);
+      console.log("Generated token: ", token);
       res.json({ token, username: user.username, success: true });
     } catch (error) {
       res.status(500).json({ message: "Server error", error: error.message, success:false });

@@ -11,15 +11,30 @@ export async function findMatchingJobs(resumeSkills, minMatchScore = 0.1) {
             },
             {
                 $addFields: {
-                    matchingSkills: {
-                        $setIntersection: ["$jobSkills", resumeSkills], // Find common skills
+                    jobSkillsLower: {
+                        $map: {
+                            input: "$jobSkills",
+                            as: "skill",
+                            in: { $toLower: "$$skill" }, // Convert each skill to lowercase
+                        },
                     },
                 },
             },
             {
-                $addFields: {
+                $set: {
+                    matchingSkills: {
+                        $setIntersection: ["$jobSkillsLower", resumeSkills.map(skill => skill.toLowerCase())], // Compare in lowercase
+                    },
+                },
+            },
+            {
+                $set: {
                     matchScore: {
-                        $divide: [{ $size: "$matchingSkills" }, { $size: "$jobSkills" }], // matchScore = matchingSkills / jobSkills
+                        $cond: {
+                            if: { $gt: [{ $size: "$jobSkillsLower" }, 0] }, // Prevent division by zero
+                            then: { $divide: [{ $size: "$matchingSkills" }, { $size: "$jobSkillsLower" }] },
+                            else: 0,
+                        },
                     },
                 },
             },

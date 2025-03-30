@@ -1,34 +1,42 @@
 import fs from "fs";
 import path from "path";
-import mammoth from "mammoth";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import 'dotenv/config'
+
 
 // Get __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Extract text from a PDF file using pdfjs-dist
- * @param {string} filePath - Path to the PDF file
+ * Extract text from a PDF file stored on S3
+ * @param {string} fileUrl - S3 URL of the PDF file
  * @returns {Promise<string>} Extracted text
  */
-async function extractPDFText(filePath) {
-    const dataBuffer = new Uint8Array(fs.readFileSync(filePath));
-    const pdf = await getDocument({ data: dataBuffer }).promise;
-    
-    let extractedText = "";
-    for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
-        extractedText += textContent.items.map(item => item.str).join(" ") + "\n";
+async function extractPDFText(fileUrl) {
+    try {
+        // Download the file from S3
+        const response = await axios.get(fileUrl, { responseType: "arraybuffer" });
+        const dataBuffer = new Uint8Array(response.data);
+
+        // Load the PDF
+        const pdf = await getDocument({ data: dataBuffer }).promise;
+
+        let extractedText = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            extractedText += textContent.items.map(item => item.str).join(" ") + "\n";
+        }
+
+        return extractedText;
+    } catch (error) {
+        console.error("Error extracting text from PDF:", error);
+        throw new Error("Failed to extract text from PDF.");
     }
-
-    return extractedText;
 }
-
 /**
  * Extract text from a DOCX file using Mammoth
  * @param {string} filePath - Path to the DOCX file
@@ -114,3 +122,18 @@ export async function analyzeResumeWithDeepSeek(resumeText) {
         throw error;
     }
 }
+
+
+export const extractSkillsFromResume = async (resumePath) => {
+    const extractedResumeText = await extractResumeText(resumePath);
+    if (!extractedResumeText) {
+      throw new Error("Failed to analyze resume!");
+    }
+  
+    const resumeData = await analyzeResumeWithDeepSeek(extractedResumeText);
+    if (!resumeData || !resumeData.skills) {
+      throw new Error("Failed to extract skills!");
+    }
+  
+    return resumeData.skills;
+  };
