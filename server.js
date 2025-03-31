@@ -15,9 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-app.use('/user', authRoutes);
-app.use('/resume',resumeRoutes);
-app.use('/jobs', jobRoutes);
+app.use('/api/user', authRoutes);
+app.use('/api//resume',resumeRoutes);
+app.use('api//jobs', jobRoutes);
 
 //configs
 connectDB();
